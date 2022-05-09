@@ -59,6 +59,8 @@ public class TemplateRequestMessageService implements IFRequestMessageService {
 		//	insert request master info
 		requestRepo.registRequestMaster(request);
 		
+		request.setRequestDtlMasterUid(request.getRequestMasterUid());
+		
 		//	insert request detail info
 		requestRepo.registRequestDetail(request.getRequestDetail(), request.getRequestMasterUid());
 		

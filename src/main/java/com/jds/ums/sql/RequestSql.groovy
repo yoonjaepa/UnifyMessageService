@@ -60,7 +60,7 @@ class RequestSql {
 
 	public static final String INSERT_REQUEST_DTL = """
 			
-				INSERT INTO yoonjaepa.TB_REQ_MSG_DTL
+				INSERT INTO TB_REQ_MSG_DTL
 						(
 						REQ_MST_UID, 
 						REQ_DTL_UID, 

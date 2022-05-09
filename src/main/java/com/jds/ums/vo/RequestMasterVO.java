@@ -43,6 +43,15 @@ public  class RequestMasterVO extends BaseAuditVO {
 		setRequestMasterUid(UUID.randomUUID().toString());
 		setRequestStatusCd("RS001");
 		
+		
+	}
+	
+	//	Detail 에 마스터 UUID를 세팅한다. 
+	public void setRequestDtlMasterUid(String masterUid) {
+		
+		for(RequestDetailVO detail :requestDetail) {
+			detail.setRequestMasterUid(masterUid);
+		}
 	}
 	
 }
