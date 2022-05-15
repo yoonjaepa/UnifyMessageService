@@ -39,7 +39,7 @@ public class KafkaMessageSender {
 
 		ListenableFuture<SendResult<String, RequestMasterVO>> future = kafkaTemplate.send(message);
 		
-//		logger.info("카프카로 메시지 보내기 2 !!");
+		log.info("카프카로 메시지 보내기 2 !!");
 		
 		future.addCallback(new ListenableFutureCallback<SendResult<String, RequestMasterVO>>() {
 			

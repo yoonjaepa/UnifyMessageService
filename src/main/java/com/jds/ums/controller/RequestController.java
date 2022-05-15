@@ -36,50 +36,18 @@ public class RequestController {
 		return "Project Name is UMS!!";
 	}
 	
-	@PostMapping("/requestTemplate")
-	public String templateRequestSendMessaage(@RequestBody  RequestMasterVO request) {
-		
-		
-		log.info(request.toString());
-		
 
-		
-		//kafkaMessageSender.send(request);
-		
-		
-		if (templateRequestMessageService.validateRequest(request)) {
-			
-			//templateRequestMessageService.transferRequest(request);
-			templateRequestMessageService.registRequest(request);
-			
-			return request.toString();
-		} else return "Error";
-		
-//		return "Test";
-		
-	}
 	
-	@PostMapping("/request")
+	@PostMapping("/requestTemplate")
 	public String templateRequest(@RequestBody  String request) {
 		
 		
 		log.info(request);
 		
-		//logger.info(jSonStr);
 		
-		//kafkaMessageSender.send(request);
-		
-		
-		/*
-		 * if (templateRequestMessageService.validateRequest(request)) {
-		 * 
-		 * //templateRequestMessageService.transferRequest(request);
-		 * templateRequestMessageService.registRequest(request);
-		 * 
-		 * return request.toString(); } else return "Error";
-		 */
-		
-		return null;
+		templateRequestMessageService.transferRequest(request);
+			
+		return request.toString();
 		
 //		return "Test";
 		

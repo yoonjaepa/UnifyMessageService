@@ -27,8 +27,8 @@ class RequestSql {
 						REQ_STTS_MDFY_DTTM, 
 						ERR_CD, 
 						ERR_DTL, 
-						REQ_DATE, 
-						REQ_ID, 
+						REG_DATE, 
+						REG_ID, 
 						MDFY_DATE, 
 						MDFY_ID
 					)
@@ -70,9 +70,10 @@ class RequestSql {
 						MSG_TITLE, 
 						RCVR_INFO, 
 						TMPLT_VAR, 
+						SNDR_INFO,
 						MSG_CONT, 
-						REQ_DATE, 
-						REQ_ID, 
+						REG_DATE, 
+						REG_ID, 
 						MDFY_DATE, 
 						MDFY_ID
 						)
@@ -84,14 +85,87 @@ class RequestSql {
 						,:mediaTypeCd       
 						,:templateCd        
 						,:messageTitle      
-						,:recieverInfo      
-						,:templateVariable  
+						,:recieverInfoJson      
+						,:templateVariableJson  
+						,:senderInfoJson
 						,:messageContents   
 						,:registDttm
 						,:registId  
 						,:modifyDttm
 						,:modifyId  
 						);
+	""";
+	
+	
+	public static final	String INSERT_REQUEST_STATUS_HIST ="""
+
+					INSERT INTO TB_REQ_STTS_LST
+						(
+						REQ_MST_UID, 
+						SEQ_NO, 
+						REQ_STTS_CD, 
+						REQ_STTS_MDFY_DTTM, 
+						REG_DATE, 
+						REG_ID, 
+						MDFY_DATE, 
+						MDFY_ID
+						)
+					VALUES
+					(
+						:requestMasterUid
+						,SELECT IFNULL(MAX(SEQ_NO),0)+1 FROM TB_REQ_STTS_LST WHERE REQ_MST_UID=:requestMasterUid 
+						,:requestStatusCd
+						,:requestStatusChangeDttm
+						,:registDttm
+						,:registId  
+						,:modifyDttm
+						,:modifyId  
+					);
+
+
+	""";
+	
+	public static final String UPDATE_REQUEST_MASTER_STATUS = """
+
+					UPDATE TB_REQ_MSG_MST
+					SET 
+						REQ_STTS_CD = :requestStatusCd, 
+						REQ_STTS_MDFY_DTTM = :requestStatusChangeDttm, 
+						ERR_CD = :errorCode, 
+						ERR_DTL = :errorDetail, 
+						MDFY_DATE = :modifyDttm, 
+						MDFY_ID = :modifyId
+					WHERE REQ_MST_UID= :requestStatusCd
+	""";
+	
+	public static final String INSERT_MESSAGE_TRANS_LIST ="""
+
+					INSERT INTO kvaram_ums.TB_MSG_TRNS_LST
+					(
+						REQ_MST_UID, 
+						REQ_DTL_UID, 
+						TRNS_SEQ_NO, 
+						TRNS_STTS_CD, 
+						REG_DATE, 
+						REG_ID, 
+						MDFY_DATE, 
+						MDFY_ID
+					)
+					VALUES
+					(
+						:requestmasterUid,
+						:requestDetailUid,
+						(SELECT IFNULL(MAX(TRNS_SEQ_NO),0)+1 FROM TB_MSG_TRNS_LST
+						 WHERE
+							REQ_MST_UID = :requestmasterUid
+							AND REQ_DTL_UID = :requestDetailUid),
+						:transferStatusCd,
+						:registDttm,
+						:registId,  
+						:modifyDttm,
+						:modifyId  
+					);
+
 	""";
 
 	

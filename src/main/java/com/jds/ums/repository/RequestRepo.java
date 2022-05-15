@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.stereotype.Repository;
 
 import com.jds.ums.sql.RequestSql;
-import com.jds.ums.vo.BaseAuditVO;
 import com.jds.ums.vo.RequestDetailVO;
 import com.jds.ums.vo.RequestMasterVO;
 
@@ -48,7 +47,7 @@ public class RequestRepo {
 				
 	}
 	
-	public int[] registRequestDetail(RequestDetailVO[] details, String masterUid) {
+	public int[] registRequestDetail(RequestDetailVO[] details) {
 		
 		int[] cnt ;
 		
@@ -58,6 +57,8 @@ public class RequestRepo {
 		
 		return cnt;
 	}	//	end registRequestDetail()
+	
+	
 	
 	
 	
