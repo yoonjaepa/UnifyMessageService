@@ -11,7 +11,7 @@
 	<groupId>com.jds</groupId>
 	<artifactId>UnifyMessageService</artifactId>
 	<version>0.9.1</version>
-	<description>Demo project for Spring Boot</description>
+	<description>Unify Message Service for K-Varam</description>
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
