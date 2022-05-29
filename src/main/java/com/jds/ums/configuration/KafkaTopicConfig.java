@@ -10,10 +10,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaAdmin;
 
+import com.github.javaparser.utils.Log;
+
+import lombok.extern.slf4j.Slf4j;
+
 @Configuration
+@Slf4j
 public class KafkaTopicConfig {
 
-	@Value("${kafka.bootstrapAddress}")
+	@Value("${spring.kafka.bootstrap-servers}")
 	private String bootstrapServers;
 	
 	@Value("${kafka.my.push.topic.name}")
@@ -22,6 +27,7 @@ public class KafkaTopicConfig {
 	@Bean
 	public KafkaAdmin kafkaAdmin() {
 		Map<String, Object> configs = new HashMap<>();
+		
 		configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
 		
 		return new KafkaAdmin(configs);
@@ -29,6 +35,7 @@ public class KafkaTopicConfig {
 	
 	@Bean
 	public NewTopic newTopic() {
+		
 		return new NewTopic(topicName, 3, (short) 3);
 	}
 	

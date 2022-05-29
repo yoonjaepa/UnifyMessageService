@@ -15,12 +15,15 @@ import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import com.jds.ums.vo.RequestMasterVO;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 
 @Configuration
+@Slf4j
 public class KafkaProducerConfig {
 
-	@Value("${kafka.bootstrapAddress}")
+	@Value("${spring.kafka.bootstrap-servers}")
 	private String bootstrapServers;
 	
 	@Bean
@@ -34,6 +37,7 @@ public class KafkaProducerConfig {
 
 	private Map<String, Object> producerFactoryConfig(){
 		Map<String, Object> configProps = new HashMap<>();
+		log.info("kafka start");
 		configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
 		configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
