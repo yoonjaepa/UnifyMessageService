@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.jds.ums.repository.RequestMasterRowMapper;
 import com.jds.ums.service.IFRequestMessageService;
 import com.jds.ums.vo.RequestMasterVO;
 
@@ -39,15 +40,14 @@ public class RequestController {
 
 	
 	@PostMapping("/requestTemplate")
-	public String templateRequest(@RequestBody  String request) {
+	public RequestMasterVO templateRequest(@RequestBody  String request) {
 		
 		
-		log.info(request);
+		log.info(request);		
 		
+		RequestMasterVO req = templateRequestMessageService.transferRequest(request);
 		
-		templateRequestMessageService.transferRequest(request);
-			
-		return request.toString();
+		return req;
 		
 //		return "Test";
 		

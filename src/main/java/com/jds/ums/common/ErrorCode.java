@@ -10,6 +10,7 @@ public enum ErrorCode {
 	ServerCommunicationException("ER700","서버 통신 오류","서버와의 통신 오류"),
 	ServerAuthenticationException("ER200","서버 인증 오류","서버와의 인증 관련 오류"),
 	ServerWorkingException("ER300","서버 오류","서버의 비정상 동작으로 인한 오류"),
+	JsonSchemaValidationException("ER010","Json 스키마 오류",""),
 	Exception("ER999","정의되지않은오류","정의되지 않은 오류");
 
 

@@ -1,8 +1,10 @@
 package com.jds.ums.service;
 
+import com.jds.ums.vo.RequestMasterVO;
+
 public interface IFRequestMessageService {
 	
-	public void 	transferRequest(String request);
+	public RequestMasterVO 	transferRequest(String request) ;
 
 
 }

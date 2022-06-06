@@ -40,9 +40,10 @@ public class RequestRepo {
 		int cnt =0;
 		
 		SqlParameterSource param =new BeanPropertySqlParameterSource(request);
-		
+			
 		cnt = namedParameterJdbcTemplate.update(RequestSql.INSERT_REQUEST_MASTER,param);
-		
+
+			
 		return cnt;
 				
 	}

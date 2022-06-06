@@ -1,0 +1,126 @@
+{
+	"title":"Request",
+	"description":"메시지 발송 요청 전문",
+	"type":"object",
+	"required": ["channelUid","bizCustUid","requestChannelIp","requestDetail","messageCount"],
+	"properties": {
+		"channelUid": {
+			"type":"string",
+			"format": "uuid"
+		},
+		"bizCustUid": {
+			"type":"string",
+			"format": "uuid"
+		},
+		"templateCd": {
+			"type":"string",
+			"maxLength": 5
+		},
+		"isTemplate": {
+			"type":"boolean"
+		},
+		"isMass": {
+			"type":"boolean"
+		},
+		"requestChannelIp": {
+			"type":"string",
+			"format":"ipv4"
+		},
+		"messageCount": {
+			"type": "integer",
+			"minimum": 1
+		},
+		"reservedStr1": {
+			"type": "string"
+		},
+		"reservedStr2": {
+			"type": "string"
+		},
+		"requestDetail": {
+			"type":"array",
+			"items": {"$ref": "#/definitions/detail"}
+		}
+	},	
+	"definitions": {
+		"detail": {
+			"type": "object",
+			"required": ["messageNo","messageTitle","receiverInfo","templateVariable","senderInfo"],
+			"properties": {
+				"messageNo": {
+					"type": "integer",
+					"minimum": 1
+				},
+				"mediaTypeCd": {
+					"type": "string"
+				},
+				"templateCd": {
+					"type": "string"
+				},
+				"messageTitle": {
+					"type": "string"
+				},
+				"receiverInfo": {
+					"type": "object",
+					"$ref": "#/definitions/$receiverInfo"					
+				},
+				"templateVariable": {
+					"type": "object",
+					"$ref": "#/definitions/$templateVariable"					
+				},
+				"senderInfo": {
+					"type": "object",
+					"$ref": "#/definitions/$senderInfo"	
+				}
+			}
+		},
+		"$receiverInfo": {
+			"type": "object",
+			"properties": {
+				"receiverEmail": {
+					"type": "string",
+					"format": "email"
+				},
+				"receiverName": {
+					"type": "string"
+				}
+			},
+			"required": ["receiverEmail","receiverName"]
+		},
+		"$templateVariable": {
+			"type": "object",
+			"required": ["custName","custEmail","custTelNo"],
+			"properties": {
+				"custName": {
+					"type": "string"
+				},
+				"custEmail": {
+					"type": "string",
+					"format": "email"
+				},
+				"custTelNo": {
+					"type": "string"
+				}
+			}		
+		},
+		"$senderInfo": {
+			"type": "object",
+			"required": ["senderName","senderEmail","returnEmail"],
+			"properties": {
+				"senderName": {
+					"type": "string"
+				},
+				"senderEmail": {
+					"type": "string",
+					"format": "email"					
+				},
+				"returnEmail": {
+					"type": "string",
+					"format": "email"
+				}
+			}				
+		}
+	}	
+}					
+						
+				
+				

@@ -4,8 +4,11 @@ package com.jds.ums.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.jds.ums.common.ErrorCode;
 import com.jds.ums.common.JsonUtil;
+import com.jds.ums.common.ValidationException;
+import com.jds.ums.component.JsonSchemaValidator;
 import com.jds.ums.component.KafkaMessageSender;
 import com.jds.ums.repository.RequestRepo;
 import com.jds.ums.vo.RequestMasterVO;
@@ -24,14 +27,35 @@ public class TemplateRequestMessageService implements IFRequestMessageService {
 	@Autowired
 	private RequestRepo requestRepo;
 	
+	@Autowired
+	private JsonSchemaValidator validator;
+	
 	private String requestJson;
 	private RequestMasterVO requestVo;
 	
-	private void setRequest(String request) {
+	/**
+	 * 기본정보들을 세팅한다. 
+	 * @param request
+	 * @throws Exception, ValidationException 
+	 */
+	private void setRequest(String request) 
+			throws Exception, ValidationException {
 		
-		if (requestValidator(request)) {
-			this.requestJson = request;
-		}
+		try {
+			if (requestValidator(request)) {
+				this.requestJson = request;
+			}	//	end if
+			
+		} catch (ValidationException e) {
+			log.error(e.toString());
+
+			throw e;
+		} catch (Exception e) {
+			log.error(e.toString());
+
+			throw e;
+		}	//	end try
+		
 		//	client 요청 json 을 객체로 변경 
 		this.requestVo = (RequestMasterVO) JsonUtil.Json2Object(request, RequestMasterVO.class);
 		//	전문 저장 
@@ -44,7 +68,6 @@ public class TemplateRequestMessageService implements IFRequestMessageService {
 	
 	private String registRequest() {
 		
-		
 		//	insert request Master
 		requestRepo.registRequestMaster(requestVo);
 		
@@ -55,20 +78,59 @@ public class TemplateRequestMessageService implements IFRequestMessageService {
 		return null;
 	}
 	
-	private boolean requestValidator(String request) {
+	/**
+	 * JSON Schema와 비교해서 결과를 반환한다. 
+	 * @param request
+	 * @return
+	 * @throws Exception
+	 * @throws ValidationException
+	 */
+	private boolean requestValidator(String request) 
+			throws Exception, ValidationException {
 		
-		return true;
-	}
+		try {
+			ProcessingReport report = validator.jsonValidationProcess(request);
+			if(report.isSuccess()) {
+				return true;
+			} else {
+				log.error(report.toString());
+				throw new ValidationException(report.toString());
+			}
+		} catch (Exception e) {
+			log.error(e.toString());
+			throw e;
+		}	//	end try
+		
+
+
+	}	//	end requestValidator
 
 	@Override
-	public void transferRequest(String request) {
+	public RequestMasterVO transferRequest(String request) {
 		
-		this.setRequest(request);
-		this.registRequest();
+		try {
+			this.setRequest(request);
+			this.registRequest();
+			
+			//	client 에서 요청한 내용을 MQ로 전달
+			kafkaMessageSender.send(this.requestVo);
+			
+		} catch(ValidationException e) {
+			log.error(e.toString());
+			this.requestVo = new RequestMasterVO();
+			this.requestVo.setErrorCode(ErrorCode.JsonSchemaValidationException.getErrorCode());
+			this.requestVo.setErrorDetail(e.getMessage());
+			
+		} catch (Exception e) {
+			log.error(e.toString());
+			this.requestVo = new RequestMasterVO();
+			this.requestVo.setErrorCode(ErrorCode.Exception.getErrorCode());
+			this.requestVo.setErrorDetail(ErrorCode.Exception.getErrorName());
+		}	//	end try		
+			
+		return this.requestVo;
 		
-		//	client 에서 요청한 내용을 MQ로 전달
-		kafkaMessageSender.send(this.requestVo);
-
+		
 	}
 	
 
